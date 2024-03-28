@@ -8,23 +8,26 @@ date: "2024-03-28"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-<center><h1>Basic Plots</h1></center>
+<center><h1>Basic visualization Tools</h1></center>
 
-<h2>Tabla de contenidos</h2> 
+ 
+<h2>Tabla de contenidos</h2>
+<ul>
+  <li><a href="#ref0">Importancia de los gráficos.</a></li>
+  <li><a href="#ref1">Diferencias entre las librerías de R.</a></li>
+  <li><a href="#ref2">Datos Cualitativos VS Datos Cuantitativos.</a></li>
+  <li><a href="#ref3">**mtcars** dataset.</a></li>
+  <li><a href="#ref4">Gráfico de barras (Bar plots).</a></li>
+  <li><a href="#ref5">Histogramas.</a></li>
+  <li><a href="#ref6">Pie Charts.</a></li>
+</ul>
 
- - [Importancia de los gráficos.](#ref0)
-  - [Diferencias entre las librerías de R.](#ref1)
-  - [Información Cualitativa VS Cuantitativa.](#ref2)
- - [**mtcars** dataset.](#ref3)
- - [Gráfico de barras (Bar plots).](#ref4)
- - [Histogramas.](#ref5)
 
-
-<center><h2> [Importancia de los gráficos](#ref0)</h2></center>
+<center><h2> <span id="ref0"> Importancia de los gráficos</span> </h2></center>
 
 Vizualisación de datos es la presentación de la información con gráficos. Es una forma de resumir tus hallazgos y mostrarlos de manera que facilitar la interpretación y pueda ayudar a identificar patrones o tendencias. Tener visualizaciones de datos excelentes hará que tu trabajo sea más interesante y claro. En este curso, aprenderás a utilizar la biblioteca ggplot2 para crear gráficos y gráficos hermosos, personalizando su apariencia según tus deseos.
 
-<center><h2>[Diferencias entre las librerías de R.](#ref1)</h2></center>
+<center><h2> <span id="ref1">Diferencias entre las librerías de R.</span></h2></center>
 
 Las diferencias entre la biblioteca de gráficos básicos plot(), que viene con R, y ggplot2 son muchas. ggplot2 fue creado para atender demandas de diseño y se basó en el "The Grammar of Graphics", un libro que describe los fundamentos para trazar datos.
 
@@ -32,7 +35,7 @@ Veamos las diferencias entre ellas utilizando un ejemplo simple.
 
 <h3>Gráfico</h3>
 
-La librería plot es la librería por defecto de R para gráficar. es bastante simple tanto syntax como en estética. Para usarlo para crear un gráfico de barras, usamos la función `barplot`, de esta manera:
+La librería plot es la librería por defecto de R para gráficar. es bastante simple tanto syntax como en estética. Para usarlo para crear un gráfico de barras, usamos la función **barplot**, de esta manera:
 ```{r}
 count <- table(mtcars$cyl)
 barplot(count)
@@ -46,9 +49,203 @@ if("ggplot2" %in% rownames(installed.packages()) == FALSE) {install.packages("gg
 library(ggplot2)
 ```
 
-Ahora, vamos a graficar nuestro gráfico. Para graficar un simple gráfico de barras utilizando `qplot` de `ggplot2`, usamos esto:
+Ahora, vamos a gráficar nuestro gráfico. Para gráficar un simple gráfico de barras utilizando **qplot** de **ggplot2**, usamos esto:
 
 ```{r}
-qplot(mtcars$cyl,geom = "bar")
+#qplot(mtcars$cyl,geom = "bar")
+ggplot(data=mtcars, aes(x=cyl))+
+  geom_bar()
 ```
 
+No te preocupes: volveremos y aprenderemos estos y otros métodos de trazado durante nuestras lecciones.
+
+<h3>ggplot2 tiene dos funciones principales, **qplot** y **ggplot()**.</h3>
+
+- **qplot()** Ofrece una sintaxis simple similar a la función por defecto **plot**, pero es limitada en personalización.
+- **ggplot()** Es la función completa. Tiene muchas más personalizaciones posibles, pero su sintaxis es más complicada que la de qplot().
+
+En este curso, comenzaremos a usar **qplot** y luego cambiaremos a **ggplot()** a medida que avanzamos.
+
+El siguiente gráfico es una demostración de lo que podemos hacer con **ggplot()**. En el final del curso seras capaz de crear gráficos como este de abajo o incluso mas complejos.
+```{r}
+# Revisando información algunas partes de código ya no se usan de esa manera pero para mantener la linea de curso las usare y luego escribiré un comentario de como se esta usando actualmente.
+
+ggplot(data= mtcars, aes(hp)) +
+  geom_histogram(breaks=seq(40,350, by = 25),
+                 colour=I("black"),
+                 aes(fill=..count..))  # esta linea del código ya no se escribe de esta manera si no que así aes(fill=after_stat(count))
+```
+<center><h2> <span id="ref2"> Datos Cualitativa VS Datos Cuantitativa </span></h2></center>
+
+Una cosa importante a tener siempre en cuenta es el tipo de datos para los cuales estás intentando crear gráficos. En general, categorizamos los datos en dos grandes grupos: Datos Cualitativos (también llamados Datos Categóricos) y Datos Cuantitativos (también llamados Datos Numéricos).
+
+Lo que nos referimos como datos cualitativos o categóricos son datos que se refieren, como se pueden inferir por su nombre, a categorías. Esto puede incluir datos para preguntas de "Sí o No", podría ser el nombre de una ubicación, podría ser el sabor de helado favorito de una persona, o podría ser algo más. Es algo muy distinto de los datos cuantitativos o numéricos. Los datos cuantitativos son datos que, simplemente, son números. Normalmente son una medida de algún tipo y pueden ser manipulados usando matemáticas simples.
+
+Los métodos de trazado y los mejores tipos de gráficos para cada tipo de datos son diferentes; elegir el mejor te ayudará mucho en la creación de gráficos visualmente agradables.
+
+<center><h2><span id="ref3"> mtcars Dataset </span></h2></center>
+
+**mtcars** es un conjunto de datos incorporado que contiene información de la revista Motor Trend US de 1974, y contiene el consumo de combustible y otros 10 aspectos del rendimiento automotriz par 32 automóviles de 1973-74.
+Dado que ya está incluido en R, no es necesario importar **mtacars**. Veamos su estructura: podemos hacerlo llamándolo por su nombre, así:
+```{r}
+mtcars
+```
+¿que tipo de percepciones podemos obtener de estos datos? tenemos rendimiento en millas por galón de gasolina de los automóviles, el número de cilindros y otros atributos.
+
+Si hay alguna columna cyyo significado desconozcas, puedes utilizar la función? para ver el archivo de ayuda de este conjunto de datos, así:
+```{r}
+?mtcars
+``` 
+
+Ten en cuenta que esto es solo posible porque mtcars es un conjunto de datos incorporado en R. Casi ningún conjunto de datos tendrá archivos de ayuda. Algunos conjuntos de datos que encuentres en internet tendrán un archivo README que describirá qué representa cada columna. Algunos incluirán el nombre de cada columna en el conjunto de datos. Aunque estas son buenas prácticas, puedes encontrar conjuntos de datos con nombres de columnas poco descriptivos e incluso conjuntos de datos sin nombres en absoluto.
+
+Como probalemente ya sepas, no necesitamos ver todo el conjunto de datos para ver cómo está estructurada la información. Podemos utilizar la función head para ver las primeras 6 filas de nuestros datos.
+
+```{r}
+head(mtcars)
+```
+Y podemos usar **tail** para ver las ultimas 6 filas de nuestros datos.
+
+```{r}
+tail(mtcars)
+```
+Sigamos analizando nuestros datos... Podemos obtener un resumen rápido de cada columna utilizando la función summary:
+
+```{r}
+summary(mtcars)
+```
+Podemos obtener el promedio de cada columna usando **mena(datasetname$columname)**, así:
+
+```{r}
+mean(mtcars$cyl)
+```
+
+<center><h2><span id="ref4">Gráfico de barras</span></h2></center>
+
+Comencemos nuestro trazado con gráficos de barras. Como su nombre lo indica, es un formato de gráfico que muestra tus datos utilizando barras. Probablemente ya hayas visto muchos de ellos.
+
+Anes de crear cualquier gráfico de barras, importemos nuestra biblioteca de gráficos, ggplot2. No es necesario ejecutar este bloque si ya has ejecutado la importación "Diferencias entr las Bibliotecas de R".
+
+```{r}
+#if("ggplot2" %in% rownames(installed.packages()) == FALSE) {install.packages("ggplot2")}
+#library(ggplot2)
+```
+
+Ahora que hemos cargado nuestras bibliotecas, comencemos a trazar. Para trazar fácilmente usando ggplot2, podemos usar la función qplot, que tiene una sintaxis más simple, de la siguiente manera:
+
+```{r}
+#qplot(mtcars$cyl, geom="bar") # el código comentado arriba pertenece al código original del curso, la función qplot ha sido dada de baja en la versión de ggplot2 que estoy usando, así que generare el código correspondiente para que la demostración pueda seguir adelante
+ggplot(data = mtcars,aes(x=factor(cyl))) + 
+  geom_bar()
+```
+ 
+Como podemos ver, hemos trazado un gráfico de barras, que consiste en el recuento de cada elemento con el mismo valor. Ahora podemos aprovechar algunas de las posibilidades de la función qplot de ggplot2.
+```{r}
+#?qplot
+?ggplot
+```
+
+No es necesario que entiendas exactamente cómo funciona cada parámetro de la función qplot, pero siempre puedes consultar el archivo de ayuda para intentar encontrar lo que necesitas.
+
+Nuestro gráfico es bastante simple tal como está en este momento. Un gráfico simple es una excelente opción para documentos académicos, pero para contenido en Internet... simplemente ser gris no captará la atención de las personas. Vamos a darle algo de color usando los parámetros color y fill. Color modificará el colo del contorno, mientras que **fill** cambiará el color de las barras.
+```{r}
+# qplot(mtcars$cyl, geom = "bar", fill = I("black"), colour = I("red")) esté código es el que esta originalmente en código
+
+ggplot(data = mtcars,aes(x=factor(cyl))) + 
+  geom_bar(colour = I("red"),
+           fill = I("black"))
+```
+
+Simplemente podemos cambiar el relleno, ya que el contorno, si no se pasa ningún parámetro, recibirá el mismo valor que el de relleno. Puedes cambiar los colores a azul, rosa, verde, amarillo...¡Y hay más colores! Aquí hay una lista: http://sape.inf.usi.ch/quick-reference/ggplot2/colour
+
+También podemos cambiar el nombre de nuestro ejes para hacerlo más comprensible pasando los parámetros xlab e ylab(lab significa "etiqueta"(label)), en ggplot ya no se usan esos parámetros usaremos labs(title = "titulo deseado", x ="etiqueta del eje X", y = "etiqueta del eje Y) así:
+```{r}
+ggplot(data= mtcars, aes(x=factor(cyl))) +
+  geom_bar(colour="red",
+           fill="blue") +
+  labs(x="Cilindros",y="Número de Vehículos")
+```
+
+Para finalizar nuestro gráfico de barras, podemos darle un nombre a nuestro gráfico. podemos hace esto usando el parámetro **title**.
+```{r}
+ggplot(data=mtcars, aes(x=factor(cyl))) +
+  geom_bar(colour="red",
+           fill="blue")+
+  labs(title = "Cilindros en mtcars", x="Cilindros", y="Número de Vehículos")
+```
+
+<center><h2><span id="ref5">Histogramas</span></h2></center>
+
+Los histogramas pueden definirse como una visualización gráfica de recuentos de datos. Es un tipo de gráfico de barras. Un histograma muestra la distribución de una variable cuantitativa. Normalmente, los gráficos de barras se utilizan para comparar variables. Por lo general, no hay espacio entre las columnas de un histograma.
+
+Vamos a hacer un histograma simple, seleccionaremos la columna horsepower de **mtcars**.
+```{r}
+#qplot(mtcars$hp,geom="histogram")
+
+ggplot(data=mtcars, aes(x=hp)) + 
+  geom_histogram()
+
+```
+
+como has ejecutado el código, es posible que recibas el siguiente mensaje de erro:stat_bin() usando bins=30. podemos elegir un mejor valor con binwidth. binwidth define el ancho de tus barras. vamos a mejorar aún más nuestro histograma, combinado nuestro binwidth.
+```{r}
+#qplot(mtcarsh$hp, geom="histogram",binwidth = 25)
+ggplot(data=mtcars, aes(x=hp)) +
+  geom_histogram(binwidth=25)
+```
+
+ok, ahora cada barra tiene un ancho de 25 pixeles. Como sea podemos ver que la visualización de la información entre los 210 y los 260 hp no se encuentran bien ilustrados. Nuevamente, agregaremos una borde negro al histograma para hacer mas fácil la visualización.
+
+```{r}
+#qplot(mtcars$hp, geom="histogram",binwidth=25,colour= I("black))
+ggplot(data = mtcars,aes(x=hp)) +
+  geom_histogram(colour=I("black"),
+                 binwidth = 25)
+```
+
+También podemos definir limites para nuestro eje X. R ajustara automáticamente los mejores valores de a cuerdo a nuestra información, así que el resultado no cambiara cuando uses qplot y el limite adecuado.
+```{r}
+#qplot(mtcars$hp, geom="histogram", binwidth=25, colour=I("black"),xlim=c(50,350))
+ggplot(data = mtcars,aes(x=hp))+
+  geom_histogram(colour=I("black"),
+                 binwidth = 25) + 
+  xlim(50,350)
+```
+
+Si sucede que "corta" algún valor, R mostrará un mensaje de error diciendo cuántos valores no se están mostrando. Como muestra arriba, juguemos con los valores de xlim para ver este mensaje. Puedes poner cualquier valor que desees aquí.
+
+```{r}
+# qplot(mtcars$hp,geom="histogram",binwidth=25,colour=I("black"),xlim=c(80,200))
+ggplot(data=mtcars,aes(x=hp)) + 
+  geom_histogram(colour=I("black"),
+                 binwidth = 25) + 
+  xlim(80,200)
+```
+
+Ahora demos le nombre a nuestros ejes. Usaremos los parametros xlab y ylab para modificarlos.
+```{r}
+#qplot(mtcars$hp, geom="histogram",binwidth = 25, colour=I("black"),xlab="Horsepower",ylab="Number of Cars")
+ggplot(data=mtcars,aes(x=hp)) +
+  geom_histogram(colour=I("black"),
+                 binwidth = 25) + 
+  xlim(50,350) + 
+  labs(x="Caballos de Fuerza",y="Número de Vehiculos")
+```
+
+Podemos remover el color que llena nuestas barras usando el parámetro alpha.
+```{r}
+#qplot(mtcars$hp, geom="histogram",binwidth=25, colour=I("black"),xlab="Horsepower,ylab="Number of Cars", alpha =I(0))
+ggplot(data = mtcars, aes(x = hp)) +
+  geom_histogram(binwidth = 25, colour = "black", alpha = 0) +  # Set alpha for slightly transparent bars
+  labs(x = "Caballos de fuerza", y = "Número de Vehículos")  # Set axis labels
+
+```
+
+Como lo hicimos con el gráfico de barra, podemos darle un nombre a nuestro gráfico, podemos hacer usando el parámetro title.
+```{r}
+#qplot(mtcars$hp,geom="histogram", binwidth = 25, colour =I("black"),xlab="Horsepower", ylab="Number of Cars", alpha=I(0))
+ggplot(data= mtcars, aes(x = hp)) +
+  geom_histogram(colour="black",
+                 binwidth = 25,
+                 alpha(0))
+```
