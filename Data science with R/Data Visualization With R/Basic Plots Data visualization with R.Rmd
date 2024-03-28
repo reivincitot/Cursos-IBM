@@ -1,0 +1,31 @@
+---
+title: "Basic Plots Lab 1 data visualization with R"
+output: html_document
+date: "2024-03-28"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<center><h1>Basic Plots</h1></center>
+
+<h2>Tabla de contenidos</h2> 
+
+ - [Importancia de los gráficos.](#ref0)
+  - [Diferencias entre las librerías de R.](#ref1)
+  - [Información Cualitativa VS Cuantitativa.](#ref2)
+ - [**mtcars** dataset.](#ref3)
+ - [Gráfico de barras (Bar plots).](#ref4)
+ - [Histogramas.](#ref5)
+
+
+<center><h2> [Importancia de los gráficos](#ref0)</h2></center>
+
+Vizualisación de datos es la presentación de la información con gráficos. Es una forma de resumir tus hallazgos y mostrarlos de manera que facilitar la interpretación y pueda ayudar a identificar patrones o tendencias. Tener visualizaciones de datos excelentes hará que tu trabajo sea más interesante y claro. En este curso, aprenderás a utilizar la biblioteca ggplot2 para crear gráficos y gráficos hermosos, personalizando su apariencia según tus deseos.
+
+<h2>[Diferencias entre las librerías de R.](#ref1)/h2>
+
+Las diferencias entre la biblioteca de gráficos básicos plot(), que viene con R, y ggplot2 son muchas. ggplot2 fue creado para atender demandas de diseño y se basó en el "The Grammar of Graphics", un libro que describe los fundamentos para trazar datos.
+
+Veamos las diferencias entre ellas utilizando un ejemplo simple
