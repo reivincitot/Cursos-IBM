@@ -24,8 +24,31 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Vizualisación de datos es la presentación de la información con gráficos. Es una forma de resumir tus hallazgos y mostrarlos de manera que facilitar la interpretación y pueda ayudar a identificar patrones o tendencias. Tener visualizaciones de datos excelentes hará que tu trabajo sea más interesante y claro. En este curso, aprenderás a utilizar la biblioteca ggplot2 para crear gráficos y gráficos hermosos, personalizando su apariencia según tus deseos.
 
-<h2>[Diferencias entre las librerías de R.](#ref1)/h2>
+<center><h2>[Diferencias entre las librerías de R.](#ref1)</h2></center>
 
 Las diferencias entre la biblioteca de gráficos básicos plot(), que viene con R, y ggplot2 son muchas. ggplot2 fue creado para atender demandas de diseño y se basó en el "The Grammar of Graphics", un libro que describe los fundamentos para trazar datos.
 
-Veamos las diferencias entre ellas utilizando un ejemplo simple
+Veamos las diferencias entre ellas utilizando un ejemplo simple.
+
+<h3>Gráfico</h3>
+
+La librería plot es la librería por defecto de R para gráficar. es bastante simple tanto syntax como en estética. Para usarlo para crear un gráfico de barras, usamos la función `barplot`, de esta manera:
+```{r}
+count <- table(mtcars$cyl)
+barplot(count)
+```
+<h3>ggplot2</h3>
+
+`ggplot2`, como se mencionó anteriormente, es una biblioteca especializada diseñada par crear visualizaciones de datos visualmente atractivas. Antes de poder usar ggplot2, necesitamos importarlo al entorno de R. La celda de código a continuación verificará si tu sistema ya tiene ggplot, para no ejecutar install.packages sin motivo. Luego, utilizando la función library,podemos importar ggplot2.
+
+```{r}
+if("ggplot2" %in% rownames(installed.packages()) == FALSE) {install.packages("ggplot2")}
+library(ggplot2)
+```
+
+Ahora, vamos a graficar nuestro gráfico. Para graficar un simple gráfico de barras utilizando `qplot` de `ggplot2`, usamos esto:
+
+```{r}
+qplot(mtcars$cyl,geom = "bar")
+```
+
