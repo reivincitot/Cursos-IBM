@@ -247,5 +247,62 @@ Como lo hicimos con el gráfico de barra, podemos darle un nombre a nuestro grá
 ggplot(data= mtcars, aes(x = hp)) +
   geom_histogram(colour="black",
                  binwidth = 25,
-                 alpha(0))
+                 alpha=0)+
+  labs(title="Histograma",x="Caballos de fuerza",y="Número de Vehiculos")
 ```
+
+<center><h2><span id="ref6">Gráficos de Pie</span></h2></center>
+
+Un gráfico de pie es un gráfico circular, que se utiliza principalmente en negocios. Muestra la proporción que cada parte de los datos contribuye a un total general. Esto se hace generalmente como una representación de los recuentos de datos cualitativos, como las características demográficas.
+
+<div class="alert alert-success alertsuccess" style="margin-top: 20px">
+<font size = 3><strong>Expert Tip: Escoger el tipo correcto de gráfico</strong></font>
+<br>
+<br>
+No sabes que tipo de gráfico debes usar para tu información? Click <a href = "http://lifehacker.com/5909501/how-to-choose-the-best-chart-for-your-data">here</a> para saber más!
+<p></p>
+</div>
+
+Un gráfico de pie en ggplot2 es un gráfico de barras apiladas transformando. Un gráfico de barras apiladas es un gráfico que apila todos los valores en el eje vertical, en lugar de crear barras separadas para cada punto de datos diferente. Comencemos creando un gráfico de barras apiladas
+
+```{r}
+barp <- ggplot(mtcars, aes(x=1,y=sort(carb), fill=sort(carb)))+
+  geom_bar(stat="identity")
+
+print(barp)
+```
+
+Ahora vamos a transformar este gráfico en un gráfico circular utilizando el sistema de coordenadas polares. En lugar de crear barras separadas para cada punto de datos, nuestro gráfico de barras apiladas ya coloca todos los valores en el eje vertical. Para lograr esto, usaremos la función auxiliar coord_polar.
+
+```{r}
+barp<- barp+coord_polar(theta='y')
+print(barp)
+```
+
+Podemos utilizar la función auxiliar theme para evitar que las etiquetas y ejes se distorsionen con nuestra transformación.
+
+```{r}
+barp <- barp + coord_polar((theta="y"))
+barp <- barp + theme(
+  axis.line = element_blank(),
+  axis.text.x = element_blank(),
+  axis.text.y = element_blank(),
+  axis.ticks = element_blank(),
+  axis.title = element_blank())
+print(barp)
+```
+
+Ahora solo debemos cambiar el rotulado:
+```{r}
+barp<- barp + coord_polar((theta='y'))
+barp<- barp + theme(
+  axis.line = element_blank(),
+  axis.text.x = element_blank(),
+  axis.text.y = element_blank(),
+  axis.ticks = element_blank(),
+  axis.title = element_blank(),
+  panel.background = element_blank()) +
+  labs(y="Carburadores", angle=180)
+print(barp)
+```
+
