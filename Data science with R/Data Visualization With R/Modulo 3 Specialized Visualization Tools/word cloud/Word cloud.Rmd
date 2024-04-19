@@ -1,0 +1,135 @@
+<center>
+
+<h1>Word cloud</h1>
+
+</center>
+
+Las Word clouds son representaciones de datos textuales que resaltan los términos más frecuentes en el conjunto de datos seleccionado. El tamaño de una word cloud es representativo de su frecuencia es el texto. Este tipo de visualización ayuda a los evaluadores, y a los observadores, a identificar palabras que aparecen con frecuencia en un conjunto de entrevistas, documentos y otro texto.
+
+<h2>Tabla de contenido</h2>
+
+<ul>
+
+<li><a href="ref0">Crear una Word Cloud en R</a></li>
+
+</ul>
+
+<img src="https://ibm.box.com/shared/static/p7u2b234cmowuusue1fm0oc0kbfsz0jt.png"/>
+
+<center>Un ejemplo de word cloud.</center>
+
+Como puedes ver, las word cloud son una forma simple y agradable a la vista de extraer y visualizar las palabras clave en un corpus de texto. Al final de este cuaderno deberías ser capas de crear una Word Cloud similar, utilizando cualquier conjunto de datos de texto que desees.
+
+<center>
+
+<h2>Crear un Word Cloud en R</h2>
+
+</center>
+
+Para los propósitos de este cuaderno, vamos a utilizar una colección de ocho discursos pronunciados por Winston Churchill a lo largo de su mandato. Si lo deseas, puedes echar un vistazo al conjunto de datos aquí:
+
+-   <font size=4>[churchill_speeches.txt](https://ibm.box.com/shared/static/cmid70rpa7xe4ocitcga1bve7r0kqnia.txt) (4.3 KB) </font>
+
+<h3>Descargando información a través de R</h3>
+
+Descargar archivos en R es bastante simple solo debes usar la función `download.file`. Adicionalmente, crearemos un directorio para mantener las cosas ordenadas(usando dir.create) puedes hacer eso ejecutando el código a continuación
+
+```{r}
+#dir.create("E:/Cursos-IBM/Data science with R/Data Visualization With R/Modulo 3 Specialized Visualization Tools")
+```
+
+<h3>Instalando los paquetes requeridos</h3>
+
+Para crear nuestro Word cloud, vamos a utilizar dos paquetes, los cuales están disponibles en CRAN (el repositorio de librerías de R). Vamos a usar principalmente dos librerías 
+
+<ul>
+<li> `tm`, el paquete de minería de texto;</li>
+<li> Y `wordcloud`, el paquete de wordcloud.</li>
+</ul>
+
+En este ejemplo, usaremos `tm` para procesar nuestro texto de gran tamaño en un formato que es fácil de manejar para R y `wordcloud` para crear nuestro gráfico word cloud.
+
+Para instalar estos paquetes, puedes ejecutar el código a continuación
+
+```{r}
+# instalando los paquetes requeridos en mi caso yo ya tenia instalado estos paquetes por eso están comentadas las lineas de abajo pero si no lo tienes instalado tu por favor descomentalo 
+#install.packages("tm") #para mineria de texto
+#install.packages("wordcloud") #generador de word-cloud
+```
+
+Una vez instalado los paquetes no necesitas volver a instalarlos. Una vez se encuentran correctamente instalados, puedes cargar las librerías en el ambiente de R al usar la función `library`
+
+```{r}
+# cargando las librerias al ambiente de R
+library(tm)
+library(wordcloud)
+```
+
+<h3>Importar datos como Corpus</h3>
+
+Ahora necesitamos importar nuestro texto. Para hacer esto, necesitamos crear un `DirSource`, el cual le indica a R la dirección que almacena nuestros archivos de texto. entonces podemos usar la función `Corpus` (del paquete `tm`) para cargar la información de ese directorio.
+
+```{r}
+dirPath <-"E:/Cursos-IBM/Data science with R/Data Visualization With R/Modulo 3 Specialized Visualization Tools/word cloud/wordcloud" #en mi caso el archivo esta almacenado en esta dirección, usted reemplace la dirección dependiendo de donde haya almacenado la suya.
+
+# Cargando la información al Corpus
+speech <- Corpus(DirSource(dirPath))
+```
+
+Podemos usar `inspect` para revisar la estructura de nuestro texto corpus. Dado que nuestro directorio solo contiene un archivo, solo habrá un documento en nuestro corpus
+
+```{r}
+inspect(speech)
+```
+
+<h3> Limpiando el texto </h3>
+La **Limpieza de datos** es un paso importante en el proceso del análisis y se dice que ocupa el 80% del tiempo del científico de datos. La limpieza de datos es el proceso de la `calidad` de tus datos, en preparación para el modelaje de datos o la visualización de datos.
+
+<h4> En nuestra limpieza de datos haremos:</h4>
+<ul>Remover espacios en blanco innecesarios</ul>
+<ul>Convertir el texto a minúsculas</ul>
+<ul>Remover stop words comunes como "like","the","we"</ul>
+<ul>Stemmming de texto que reduce las palabras a sus raíces </ul>
+<ul>Remover números con el argumento removeNumbers</ul>
+<ul>Remover puntuaciones con el argumento removePunctuation</ul>
+
+```{r}
+# Convert the text to lower case
+speech <- tm_map(speech, content_transformer(tolower))
+
+# Remove numbers
+speech <- tm_map(speech, removeNumbers)
+
+# Remove english common stopwords
+speech <- tm_map(speech, removeWords, stopwords("english"))
+
+# Remove your own stop word
+# specify your stopwords as a character vector
+speech <- tm_map(speech, removeWords, c("floccinaucinihilipification", "squirrelled")) 
+
+# Remove punctuations
+speech <- tm_map(speech, removePunctuation)
+
+# Eliminate extra white spaces
+speech <- tm_map(speech, stripWhitespace)
+
+```
+
+<h3> Generando una matriz de termino-documento</h3>
+
+Una matriz de documento es una tabla que contiene la frecuencia de las palabras. Los nombres de las columnas son palabras y los nombres de las filas son los documentos dentro de nuestro corpus. La función TermDocumentMatrix se utiliza par crear matices de documentos.
+
+```{r}
+# Crea una Matriz del termino-documento
+dtm <- TermDocumentMatrix(speech)
+
+# Ordenala para mostrar las palabras más frecuentes
+v <- sort(rowSums(m), decreasing = TRUE)
+
+# Transforma a un data frame
+d <- data.frame(word = names(v), freq = v)
+
+head(d, 10)
+
+```
+

@@ -1,0 +1,214 @@
+<center><h1>Basic Plots</h1></center>
+
+<h2>Tabla de contenido</h2>
+<ul>
+<li><a href="#ref0">Introducción</a></li>
+<li><a href="#ref1">Scatter plot</a></li>
+<li><a href="#ref2">Line Plot</a></li>
+<li style="margin-left: 40px;"><a href="#ref3">Simple Line Graph</a></li>
+<li style="margin-left: 40px;"><a href="#ref4">Regression</a></li>
+</ul>
+
+<a id="ref0"></a>
+<h2 align=center>Introducción</h2>
+
+La visualización de datos es la presentación de datos mediante gráficos. Es una forma de resumir tus hallazgos y mostrarlos de una manera que facilite la interpretación y pueda ayudar a identificar patrones o tendencias.Contar con excelentes visualizaciones de datos hará que tu trabajo sea más interesante y claro. En este cuaderno aprenderás cómo crear gráficos de dispersión y gráficos de líneas (Scatter plots, Line Plots)
+
+<a id ="ref1"></a>
+<h2 align=center> Scatter Plots</h2>
+
+Un scatter plot usa puntos y coordenadas cartesianas para mostrar la posición de los valores entre dos o más variables. Es posible trazar gráficos de dispersión en 2D y 3D.
+
+Vamos a comenzar por importar la biblioteca 'ggplot2'
+
+```{r}
+library(ggplot2)
+```
+
+Podemos crear un diagrama de dispersión 2D muy simple utilizando simplemente 'qplot'. Al utilizar dos variables como parámetros, se genera un diagrama de dispersión por defecto.Aquí estamos utilizando el conjunto de datos 'mtcars'.
+
+```{r}
+qplot(mpg,wt,data = mtcars)
+```
+
+Podemos crear gráficos similares usando ggplot.
+```{r}
+ggplot(mtcars,aes(x= mpg, y= wt)) + geom_point(shape=1)
+```
+
+Debes de haber notado que la forma de los círculos cambia. Podemos tener círculos sólidos al modificar el parámetro `geom_point`
+ 
+```{r}
+ggplot(mtcars, aes(x=mpg, y=wt)) + geom_point(shape=19)
+```
+
+Como podemos controlar las formas, podemos aprovechar esto y trazar tres variables en un diagrama de dispersión bidimensional. Solo necesitas pasar el parámetro de forma como una columna presente en tu conjunto de datos.
+ 
+```{r}
+ggplot(mtcars, aes(x=mpg,y=wt,shape=cyl)) + geom_point() + scale_shape_identity()
+```
+
+No funcionó. Eso es por que necesitamos tener datos categóricos, en lugar de numéricos. Podemos solucionarlo creando factores para los cilindros.
+ 
+```{r}
+mtcars$cylFactor<- factor(mtcars$cyl)
+```
+
+Ahora solo necesitamos gráficar nuestro gráfico nuevamente.
+
+
+```{r}
+ggplot(mtcars,aes(x=mpg,y=wt,shape=cylFactor)) + geom_point()
+```
+
+Podemos cambiar los colores de nuestros círculos utilizando el parámetro de color
+
+```{r}
+ggplot(mtcars,aes(x=mpg,y=wt)) + geom_point(shape=19, colour="blue")
+```
+
+Como hicimos en las formas, podemos hacer lo mismo con colores. De nuevo, simplemente pasa el parámetro de color como una columna presente en tu conjunto de datos.
+
+```{r}
+ggplot(mtcars, aes(x=mpg,y=wt, color = cyl))+ geom_point(shape=19)
+```
+
+Como el gráfico anterior usó numéricos, creó la etiqueta con un gradiente de 4 a 8. Si usamos datos categóricos, como los `cylFactors`,podemos asignar un color único para cada categoría.
+
+```{r}
+ggplot(mtcars,aes(x=mpg,y=wt,color=cylFactor)) + geom_point(shape=19)
+```
+
+Ahora vamos a renombrar nuestra leyenda o nuestros usuarios no sabran exactamente que es cylFactor.
+
+```{r}
+ggplot(mtcars,aes(x=mpg,y=wt,color=cylFactor)) + geom_point(shape=19) + labs(colour="Cylinders")
+```
+
+Solo para terminar nuestro gráfico, podemos renombrar y crear las etiquetas restantes.
+
+```{r}
+ggplot(mtcars,aes(x=mpg,y=wt,color=cylFactor)) + geom_point(shape=19) + xlab("Miles per Gallon") + ylab("Weight") + labs(colour = "Cylinders") + ggtitle("Scatterplot")
+```
+
+<a id="ref2"></a>
+<h2 align=center> Line Graph</h2>
+
+Los gráficos de líneas también son representaciones de datos en las que se utilizan coordenadas cartesianas. Al igual que en los gráficos de dispersión, los datos e transforman en puntos; sin embargo, en los gráficos de líneas, están conectados por líneas, como su nombre lo indica.
+
+<a id="href3"></a>
+<h2 align=center> Simple line Graph</h2>
+
+Para los gráficos de líneas, vamos a utilizar el conjunto de datos EuStockMarjets. También es un conjunto de datos que viene incluido con R y describe los datos históricos de cuatro mercados de valores europeos.
+
+Comencemos revisando su archivo de ayuda.
+
+```{r}
+?EuStockMarkets
+```
+
+Como podemos ver, contiene 1860 observaciones para cada uno y su tipo de archivo es mts, que significa matriz. ggplot2 no funciona con matrices.
+
+Para superar esta limitación, deberíamos crear un dataframe a partir de esta matriz. Afortunadamente, hay una función que hace exactamente lo que necesitamos. Es la función as.data.frame().
+
+```{r}
+EuStockDF <- as.data.frame(EuStockMarkets)
+```
+
+Claro, vamos a echar u vistazo a las primeras filas para ver cómo está estructurado los datos.
+
+```{r}
+head(EuStockDF)
+```
+
+¡Perfecto! Vamos a empezar a trazar un gráfico.
+
+Vamos a crear un gráfico de linea para el precio de la acción "DAX".
+
+```{r}
+ggplot(EuStockDF,aes(x=c(1:nrow(EuStockDF)), y=DAX)) + geom_line()
+```
+
+Vamos a incrementar el ancho de nuestra linea:
+
+```{r}
+ggplot(EuStockDF,aes(x=c(1:nrow(EuStockDF)),y=DAX)) + geom_line(linewidth=1.5) + labs(x="Stocks") 
+```
+
+para cambiar el color usamos el parámetro "colour".
+
+```{r}
+ggplot(EuStockDF,aes(x=c(1:nrow(EuStockDF)), y=DAX)) + geom_line(linewidth=1.5, colour="light blue") + labs(x="Time",y="Stocks")
+```
+
+También podemos trazar más de una línea al mismo tiempo en el mismo gráfico. Intentemos trazar dos acciones en el mismo gráfico.
+
+```{r}
+dax_smi_plot <- ggplot()+
+  geom_line(data = EuStockDF,aes(x=c(1:nrow(EuStockDF)), y= DAX),linewidth = 1.5, colour="light blue") + 
+  geom_line(data = EuStockDF,aes(x=c(1:nrow(EuStockDF)), y=DAX),linwidht=1.5, colour="red") + 
+  labs(x="Time", y="Stocks")
+print(dax_smi_plot)
+```
+
+Ahora vamos a trazar todas las acciones.
+
+```{r}
+all_stocks <- ggplot() +
+  geom_line(data = EuStockDF,aes(x=c(1:nrow(EuStockDF)),y=DAX), linewidth=1, colour="light blue") +
+  geom_line(data = EuStockDF,aes(x=c(1:nrow(EuStockDF)),y=SMI), linewidth=1, colour="red") +
+  geom_line(data = EuStockDF,aes(x=c(1:nrow(EuStockDF)),y=CAC), linewidth=1, colour="purple") +
+  geom_line(data = EuStockDF,aes(x=c(1:nrow(EuStockDF)),y=FTSE), linewidth=1, colour="green") +
+  labs(x = "Time", y = "Stocks")
+
+print(all_stocks)
+```
+
+Cambiemos los rótulos de nuestro gráfico.
+
+```{r}
+legend_stocks <- all_stocks + xlab("Days") + ylab("Price") + ggtitle(" Eu Stocks")
+print(legend_stocks)
+```
+
+<a id="href4"></a>
+<h3> Regression </h3>
+
+La regresión es un concepto de modelado matemático en el que se crea una fórmula lineal para simular el comportamiento percibido de los puntos de datos para los cuales se crea el modelo. la regresión es una excelente manera de visualizar tendencias y crear predicciones básicas.
+
+Las predicciones se realizan en un conjunto de variables, dadas otro conjunto de variables. Por lo general, las tendencias se extraen ede la relación entre dos conjuntos de variables. En este ejemplo, estaremos comprobando si hay alguna relación entre el peso y las millas por galón de un automóvil.
+
+Para visualizar la regresión, podemos trazar nuestra línea de ajuste sobre nuestros gráficos. Utilizaremos el mismo ejemplo de la sección anterior y dibujaremos nuestra línea de regresión encima.
+
+El primer método que utilizaremos es la regresión lineal, que es una regresión que utiliza lo que llamamos un modelo lineal. Para hacerlo, pasamos el parámetro lm al atributo method de la función `geom_smooth`, de esta manera:
+
+```{r}
+ggplot(mtcars,aes(x=mpg,y=wt)) + geom_point(shape=19) + 
+  geom_smooth(method = "lm", se= FALSE, color = "red")
+```
+
+Puede que hayas notado que nuestro código tiene `se=FALSE`. `se` representa lo que llamamos el "intervalo de confianza" de nuestro modelo. Los intervalos de confianza son un límite inferior y superior en el que podemos tener un 95% de certeza de que un punto de datos estará dentro.
+
+Si deseas mostrar este intervalo, puedes simplemente ignorar el atributo se o establecerlo en TRUE.
+
+```{r}
+# se = TRUE -> el intervalo de confianza aparece (default=TRUE)
+ggplot(mtcars,aes(x=mpg,y=wt, color=cylFactor)) + geom_point(shape=19) + geom_smooth(method = "lm", se=TRUE, color="red")
+```
+
+al igual que con los otros gráficos, podemos agregar etiquetas a nuestros gráficos de regresión lineal:
+
+```{r}
+ggplot(mtcars,aes(x=mpg,y=wt, color=cylFactor)) + geom_point(shape=19) +
+  geom_smooth(method = "lm", se=TRUE, color="red") + xlab("Miles per Gallon") +
+  ylab("Weight") + labs(colour="Cylinders") +ggtitle("Linear Regression")
+```
+
+Otro tipo de regresión utiliza el modelo gaussiano. En lugar de una linea recta, el modelo gaussiano ajusta una curva (posiblemente no recta). para utilizar el modelo gaussiano, pasamos el parámetro "auto" al atributo "method".
+
+```{r}
+ggplot(mtcars,aes(x=mpg,y=wt,color=cylFactor)) + geom_point(shape=19) +
+  geom_smooth(method="auto" , se=TRUE, color = "red")+ xlab("Miles per Gallon")+ 
+                ylab("Weight") + labs(colour ="Cylinders")+ ggtitle("Gaussian Regression")
+```
+
