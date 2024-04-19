@@ -70,7 +70,7 @@ library(wordcloud)
 Ahora necesitamos importar nuestro texto. Para hacer esto, necesitamos crear un `DirSource`, el cual le indica a R la dirección que almacena nuestros archivos de texto. entonces podemos usar la función `Corpus` (del paquete `tm`) para cargar la información de ese directorio.
 
 ```{r}
-dirPath <-"E:/Cursos-IBM/Data science with R/Data Visualization With R/Modulo 3 Specialized Visualization Tools/word cloud/wordcloud" #en mi caso el archivo esta almacenado en esta dirección, usted reemplace la dirección dependiendo de donde haya almacenado la suya.
+dirPath <- "E:/Cursos-IBM/Data science with R/Data Visualization With R/Modulo 3 Specialized Visualization Tools/word cloud/wordcloud" #en mi caso el archivo esta almacenado en esta dirección, usted reemplace la dirección dependiendo de donde haya almacenado la suya.
 
 # Cargando la información al Corpus
 speech <- Corpus(DirSource(dirPath))
